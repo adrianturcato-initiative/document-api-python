@@ -174,7 +174,7 @@ class Datasource(object):
         """
 
         # save the file
-
+        print("Datasource.save does this get called")
         xfile._save_file(self._filename, self._datasourceTree)
 
     def save_as(self, new_filename):
@@ -188,7 +188,7 @@ class Datasource(object):
             Nothing.
 
         """
-
+        print("Datasource.save_as does this get called")
         xfile._save_file(self._filename, self._datasourceTree, new_filename)
 
     @property

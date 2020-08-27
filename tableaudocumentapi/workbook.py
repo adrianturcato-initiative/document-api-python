@@ -1,7 +1,7 @@
 import weakref
 
 
-from tableaudocumentapi import Datasource, xfile
+from tableaudocumentapi import Datasource, Dashboard, xfile
 from tableaudocumentapi.xfile import xml_open
 
 
@@ -21,18 +21,21 @@ class Workbook(object):
 
         self._workbookRoot = self._workbookTree.getroot()
         # prepare our datasource objects
-        self._datasources = self._prepare_datasources(
-            self._workbookRoot)  # self.workbookRoot.find('datasources')
+        self._datasources = self._prepare_datasources(self._workbookRoot)
 
         self._datasource_index = self._prepare_datasource_index(self._datasources)
 
-        self._worksheets = self._prepare_worksheets(
-            self._workbookRoot, self._datasource_index
-        )
+        self._worksheets = self._prepare_worksheets(self._workbookRoot, self._datasource_index)
+
+        self._dashboards = self._prepare_dashboards(self._workbookRoot)
 
     @property
     def datasources(self):
         return self._datasources
+
+    @property
+    def dashboards(self):
+        return self._dashboards
 
     @property
     def worksheets(self):
@@ -68,8 +71,7 @@ class Workbook(object):
             Nothing.
 
         """
-        xfile._save_file(
-            self._filename, self._workbookTree, new_filename)
+        xfile._save_file(self._filename, self._workbookTree, new_filename)
 
     @staticmethod
     def _prepare_datasource_index(datasources):
@@ -104,7 +106,6 @@ class Workbook(object):
         for worksheet_element in worksheets_element:
             worksheet_name = worksheet_element.attrib['name']
             worksheets.append(worksheet_name)  # TODO: A real worksheet object, for now, only name
-
             dependencies = worksheet_element.findall('.//datasource-dependencies')
 
             for dependency in dependencies:
@@ -116,3 +117,18 @@ class Workbook(object):
                         datasource.fields[column_name].add_used_in(worksheet_name)
 
         return worksheets
+
+    @staticmethod
+    def _prepare_dashboards(xml_root):
+        dashboards = []
+
+        # loop through our datasources and append
+        dashboard_elements = xml_root.find('dashboards')
+        if dashboard_elements is None:
+            return []
+
+        for dashboard in dashboard_elements:
+            db = Dashboard(dashboard)
+            dashboards.append(db)
+
+        return dashboards
