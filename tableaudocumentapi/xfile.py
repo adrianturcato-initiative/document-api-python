@@ -81,7 +81,7 @@ def get_xml_from_archive(filename):
     return xml_tree
 
 
-def build_archive_file(archive_contents, zip_file):
+def build_archive_file(archive_contents, zip_file, new_logo=None):
     """Build a Tableau-compatible archive file."""
 
     # This is tested against Desktop and Server, and reverse engineered by lots
@@ -89,12 +89,18 @@ def build_archive_file(archive_contents, zip_file):
     for root_dir, _, files in os.walk(archive_contents):
         relative_dir = os.path.relpath(root_dir, archive_contents)
         for f in files:
-            temp_file_full_path = os.path.join(archive_contents, relative_dir, f)
-            zipname = os.path.join(relative_dir, f)
+            if relative_dir == "Image" and new_logo:
+                #TODO throw error if logo can't be found
+                temp_file_full_path = os.path.abspath(new_logo.filepath)
+                zipname = os.path.join(relative_dir, new_logo.name)
+            else:
+                temp_file_full_path = os.path.join(archive_contents, relative_dir, f)
+                zipname = os.path.join(relative_dir, f)
+
             zip_file.write(temp_file_full_path, arcname=zipname)
 
 
-def save_into_archive(xml_tree, filename, new_filename=None):
+def save_into_archive(xml_tree, filename, new_filename=None, new_logo=None):
     # Saving an archive means extracting the contents into a temp folder,
     # saving the changes over the twb/tds in that folder, and then
     # packaging it back up into a zip with a very specific format
@@ -112,16 +118,18 @@ def save_into_archive(xml_tree, filename, new_filename=None):
         xml_tree.write(os.path.join(temp_path, xml_file), encoding="utf-8", xml_declaration=True)
 
         # Write the new archive with the contents of the temp folder
+        if not os.path.exists(os.path.dirname(new_filename)):
+            os.mkdir(os.path.dirname(new_filename))
         with zipfile.ZipFile(new_filename, "w", compression=zipfile.ZIP_DEFLATED) as new_archive:
-            build_archive_file(temp_path, new_archive)
+            build_archive_file(temp_path, new_archive, new_logo)
 
 
-def _save_file(container_file, xml_tree, new_filename=None):
+def _save_file(container_file, xml_tree, new_filename=None, new_logo=None):
 
     if new_filename is None:
         new_filename = container_file
 
     if zipfile.is_zipfile(container_file):
-        save_into_archive(xml_tree, container_file, new_filename)
+        save_into_archive(xml_tree, container_file, new_filename, new_logo)
     else:
         xml_tree.write(new_filename, encoding="utf-8", xml_declaration=True)

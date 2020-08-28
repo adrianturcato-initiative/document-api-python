@@ -60,7 +60,7 @@ class Workbook(object):
         # save the file
         xfile._save_file(self._filename, self._workbookTree)
 
-    def save_as(self, new_filename):
+    def save_as(self, new_filename, new_logo=None):
         """
         Save our file with the name provided.
 
@@ -71,7 +71,7 @@ class Workbook(object):
             Nothing.
 
         """
-        xfile._save_file(self._filename, self._workbookTree, new_filename)
+        xfile._save_file(self._filename, self._workbookTree, new_filename, new_logo)
 
     @staticmethod
     def _prepare_datasource_index(datasources):
