@@ -13,6 +13,7 @@ class Zone(object):
         self._name = xml.get('name', None)
         self._type = xml.get('type', None)
         self._param = xml.get('param', None)
+        self._properties = xml.items()
         self._h = xml.get('h', None)
         self._w = xml.get('w', None)
         self._x = xml.get('x', None)
@@ -54,6 +55,15 @@ class Zone(object):
     def param(self, value):
         self._param = value
         self._zoneXML.set('param', value)
+
+    @property
+    def properties(self):
+        return self._properties
+
+    @properties.setter
+    def properties(self, value):
+        self._properties = value
+        self._zoneXML.set('properties', value)
 
     @property
     def h(self):

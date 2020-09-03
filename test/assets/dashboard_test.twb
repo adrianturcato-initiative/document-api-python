@@ -1,0 +1,269 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 9300.16.0603.2240                                -->
+<workbook source-build='9.3.3 (9300.16.0603.2240)' source-platform='mac' version='9.3' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <datasources>
+    <datasource inline='true' name='datasource_test' version='9.3'>
+      <connection authentication='username-password' class='postgres' dbname='TestV1' odbc-native-protocol='yes' port='5432' server='postgres91.test.tsi.lan' username='test'>
+        <relation name='xy' table='[public].[xy]' type='table' />
+        <metadata-records>
+          <metadata-record class='column'>
+            <remote-name>a</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[a]</local-name>
+            <parent-name>[xy]</parent-name>
+            <remote-alias>a</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <width>255</width>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_WVARCHAR&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_WCHAR&quot;</attribute>
+              <attribute datatype='string' name='TypeIsVarchar'>&quot;true&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>x</remote-name>
+            <remote-type>3</remote-type>
+            <local-name>[x]</local-name>
+            <parent-name>[xy]</parent-name>
+            <remote-alias>x</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>10</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_INTEGER&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_SLONG&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>y</remote-name>
+            <remote-type>3</remote-type>
+            <local-name>[y]</local-name>
+            <parent-name>[xy]</parent-name>
+            <remote-alias>y</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>10</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_INTEGER&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_SLONG&quot;</attribute>
+            </attributes>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+        <calculation class='tableau' formula='1' />
+      </column>
+      <column caption='A' datatype='string' name='[a]' role='dimension' type='nominal' />
+      <column caption='X' datatype='integer' name='[x]' role='measure' type='quantitative' />
+      <column caption='Y' datatype='integer' name='[y]' role='measure' type='quantitative' />
+      <layout dim-ordering='alphabetic' dim-percentage='0.48' measure-ordering='alphabetic' measure-percentage='0.52' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet 1'>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='datasource_test' />
+          </datasources>
+          <datasource-dependencies datasource='datasource_test'>
+            <column caption='A' datatype='string' name='[a]' role='dimension' type='nominal' />
+            <column-instance column='[a]' derivation='None' name='[none:a:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows>[datasource_test].[none:a:nk]</rows>
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name='Sheet 2'>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='datasource_test' />
+          </datasources>
+          <datasource-dependencies datasource='datasource_test'>
+            <column caption='A' datatype='string' name='[a]' role='dimension' type='nominal' />
+            <column-instance column='[a]' derivation='None' name='[none:a:nk]' pivot='key' type='nominal' />
+            <column-instance column='[x]' derivation='Sum' name='[sum:x:qk]' pivot='key' type='quantitative' />
+            <column caption='X' datatype='integer' name='[x]' role='measure' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows>[datasource_test].[none:a:nk]</rows>
+        <cols>[datasource_test].[sum:x:qk]</cols>
+      </table>
+    </worksheet>
+  </worksheets>
+  <windows source-height='28'>
+    <window class='worksheet' name='Sheet 1'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class='worksheet' maximized='true' name='Sheet 2'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+  </windows>
+  <dashboards>
+    <dashboard name='dashboard'>
+      <style>
+        <style-rule element='table'>
+          <format attr='background-color' value='#f5f2ee' />
+        </style-rule>
+      </style>
+      <size maxheight='1000' maxwidth='1250' minheight='1000' minwidth='1250' sizing-mode='fixed' />
+      <zones>
+        <zone h='7500' id='1' type='text' w='99600' x='320' y='0'>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#1b2326' />
+          </zone-style>
+        </zone>
+        <zone h='6600' id='2' is-scaled='1' param='Image/logo.png' type='bitmap' w='5920' x='640' y='500' />
+        <zone forceUpdate='true' h='5000' id='3' type='text' w='68160' x='15200' y='1500'>
+          <formatted-text>
+            <run fontalignment='1' fontcolor='#f5f5f5' fontname='League Gothic' fontsize='32'>AD VERIFICATION </run>
+            <run fontalignment='1' fontcolor='#6acced' fontname='League Gothic' fontsize='32'>GLOSSARY</run>
+          </formatted-text>
+        </zone>
+        <zone forceUpdate='true' h='2400' id='4' type='text' w='10000' x='800' y='16000'>
+          <formatted-text>
+            <run fontcolor='#1b2326' fontname='League Gothic' fontsize='18'>SUMMARY</run>
+          </formatted-text>
+        </zone>
+        <zone h='2200' id='6' type='text' w='40000' x='640' y='19000'>
+          <formatted-text>
+            <run bold='true' fontcolor='#1b2326' fontname='Arial'>This document defines the data elements outlined in this Dashboard.</run>
+            <run fontcolor='#1b2326' fontname='Arial'>Æ </run>
+          </formatted-text>
+        </zone>
+        <zone h='2400' id='7' type='text' w='15200' x='800' y='24000'>
+          <formatted-text>
+            <run fontcolor='#1b2326' fontname='League Gothic' fontsize='18'>METRIC TERMINOLOGY</run>
+          </formatted-text>
+        </zone>
+        <zone h='2000' id='9' type='text' w='7200' x='4000' y='28000'>
+          <formatted-text>
+            <run bold='true' fontalignment='1' fontcolor='#1b2326' fontname='Arial' fontsize='11'>Metric</run>
+          </formatted-text>
+        </zone>
+        <zone forceUpdate='true' h='2000' id='10' type='text' w='10000' x='23200' y='28000'>
+          <formatted-text>
+            <run bold='true' fontalignment='1' fontcolor='#1b2326' fontname='Arial' fontsize='11'>Description</run>
+          </formatted-text>
+        </zone>
+        <zone h='66300' id='11' name='Glossary Description' show-title='false' w='98960' x='640' y='30000' />
+        <zone h='3000' id='12' type='text' w='99600' x='320' y='97000'>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#1b2326' />
+          </zone-style>
+        </zone>
+        <zone h='300' id='8' type='text' w='40000' x='640' y='26500'>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#5ec7eb' />
+          </zone-style>
+        </zone>
+        <zone h='300' id='5' type='text' w='40000' x='640' y='18500'>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#5ec7eb' />
+          </zone-style>
+        </zone>
+        <zone h='2000' id='13' name='Overview Gray (2)' show-title='false' w='6800' x='400' y='8500' />
+        <zone h='2000' id='15' name='Glossary Black' show-title='false' w='7200' x='8800' y='8500' />
+        <zone h='400' id='16' type='text' w='6800' x='8960' y='10600'>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#ff574a' />
+          </zone-style>
+        </zone>
+        <zone h='3000' id='17' type='text' w='99600' x='320' y='12000'>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='background-color' value='#1b2326' />
+          </zone-style>
+        </zone>
+      </zones>
+      <simple-id uuid='{FD49728B-877B-4FF5-BC72-34753F0CF278}' />
+    </dashboard>
+  </dashboards>
+</workbook>

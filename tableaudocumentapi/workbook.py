@@ -1,6 +1,5 @@
 import weakref
 
-
 from tableaudocumentapi import Datasource, Dashboard, xfile
 from tableaudocumentapi.xfile import xml_open
 
@@ -16,6 +15,8 @@ class Workbook(object):
         """
 
         self._filename = filename
+
+        self._name = self._prepare_name(self._filename)
 
         self._workbookTree = xml_open(self._filename, 'workbook')
 
@@ -44,6 +45,10 @@ class Workbook(object):
     @property
     def filename(self):
         return self._filename
+
+    @property
+    def name(self):
+        return self._name
 
     def save(self):
         """
@@ -132,3 +137,8 @@ class Workbook(object):
             dashboards.append(db)
 
         return dashboards
+
+    @staticmethod
+    def _prepare_name(filename):
+        f = filename.split("\\")[-1].split(".")[0]
+        return f

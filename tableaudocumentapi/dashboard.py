@@ -22,7 +22,6 @@ class Dashboard(object):
         zone_elements = xml.find('zones')
         if zone_elements is None:
             return []
-
         for zone in zone_elements:
             zn = Zone(zone)
             zones.append(zn)
@@ -31,10 +30,22 @@ class Dashboard(object):
     def _prepare_logo_zones(self):
         logo_zones = []
         for zone in self._zones:
-            if zone.type == 'bitmap':
-                logo_zones.append(zone)
+            for prop in zone.properties:
+                if prop[1] == 'bitmap':
+                    logo_zones.append(zone)
+                    break
+            # if zone.type == 'bitmap':
+            #     logo_zones.append(zone)
+            # else:
+            #     if zone.param and ".png" in zone.param:
+            #         print("here",zone.properties)
+            #         logo_zones.append(zone)
 
         return logo_zones
+
+    @property
+    def zones(self):
+        return self._zones
 
     @property
     def logo_zones(self):
