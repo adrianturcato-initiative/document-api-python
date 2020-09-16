@@ -14,15 +14,18 @@ TEST_TWB_FILE = os.path.join(
     'dashboard_test.twb'
 )
 
-class ZoneTWB(unittest.TestCase):
+class GroupTWB(unittest.TestCase):
 
     def setUp(self):
         self.wb = Workbook(TEST_TWB_FILE)
-        # Assume the first dashboard in the file
+        # Assume the first datasource in the file
         self.db = self.wb.dashboards[0]
         self.zone = self.db.zones[0]
         self.logo_zone = self.db.logo_zones[0]
 
-    def test_zones_in_dashboard(self):
+    def test_groups_in_dashboard(self):
         self.assertIsNotNone(self.zone)
         self.assertIsNotNone(self.logo_zone)
+
+
+

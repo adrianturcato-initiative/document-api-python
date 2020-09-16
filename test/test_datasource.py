@@ -11,6 +11,7 @@ TEST_ASSET_DIR = os.path.join(
     os.path.dirname(__file__),
     'assets'
 )
+
 TEST_TDS_FILE = os.path.join(
     TEST_ASSET_DIR,
     'datasource_test.tds'
@@ -20,7 +21,6 @@ TEST_TWB_FILE = os.path.join(
     TEST_ASSET_DIR,
     'datasource_test.twb'
 )
-
 
 class DataSourceFieldsTDS(unittest.TestCase):
 

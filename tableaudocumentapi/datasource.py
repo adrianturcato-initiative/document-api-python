@@ -59,7 +59,6 @@ def _column_object_from_metadata_xml(metadata_xml):
     field_object = Field.from_metadata_xml(metadata_xml)
     return _ColumnObjectReturnTuple(field_object.id, field_object)
 
-
 def base36encode(number):
     """Converts an integer into a base36 string."""
 
@@ -137,6 +136,7 @@ class Datasource(object):
             self._datasourceXML, version=self._version)
         self._connections = self._connection_parser.get_connections()
         self._fields = None
+        self._groups = self._prepare_groups(dsxml)
 
     @classmethod
     def from_file(cls, filename):
@@ -245,3 +245,9 @@ class Datasource(object):
     def _get_column_objects(self):
         return [_column_object_from_column_xml(self._datasourceTree, xml)
                 for xml in self._datasourceTree.findall('.//column')]
+
+    @staticmethod
+    def _prepare_groups(xml):
+        groups = xml.findall('group')
+        print(groups)
+        return []
