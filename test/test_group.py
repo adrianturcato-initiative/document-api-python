@@ -11,21 +11,20 @@ TEST_ASSET_DIR = os.path.join(
 
 TEST_TWB_FILE = os.path.join(
     TEST_ASSET_DIR,
-    'dashboard_test.twb'
+    'group_test.twb'
 )
 
 class GroupTWB(unittest.TestCase):
 
     def setUp(self):
         self.wb = Workbook(TEST_TWB_FILE)
-        # Assume the first datasource in the file
-        self.db = self.wb.dashboards[0]
-        self.zone = self.db.zones[0]
-        self.logo_zone = self.db.logo_zones[0]
-
-    def test_groups_in_dashboard(self):
-        self.assertIsNotNone(self.zone)
-        self.assertIsNotNone(self.logo_zone)
+        # Assume the first dashboard in the file
+        self.datasources = self.wb.datasources
 
 
-
+    def test_groups_in_datasource(self):
+        self.assertEqual(len(self.datasources[0].groups), 0)
+        self.assertEqual(len(self.datasources[1].groups), 0)
+        self.assertEqual(len(self.datasources[2].groups), 0)
+        self.assertEqual(len(self.datasources[3].groups), 1)
+        self.assertEqual(len(self.datasources[4].groups), 4)

@@ -5,7 +5,7 @@ import xml.sax.saxutils as sax
 from uuid import uuid4
 
 from tableaudocumentapi import Connection, xfile
-from tableaudocumentapi import Field
+from tableaudocumentapi import Field, Group
 from tableaudocumentapi.multilookup_dict import MultiLookupDict
 from tableaudocumentapi.xfile import xml_open
 
@@ -246,8 +246,10 @@ class Datasource(object):
         return [_column_object_from_column_xml(self._datasourceTree, xml)
                 for xml in self._datasourceTree.findall('.//column')]
 
+    @property
+    def groups(self):
+        return self._groups
+
     @staticmethod
     def _prepare_groups(xml):
-        groups = xml.findall('group')
-        print(groups)
-        return []
+        return [Group(g) for g in xml.findall('group')]
