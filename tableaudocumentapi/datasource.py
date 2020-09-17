@@ -253,3 +253,5 @@ class Datasource(object):
     @staticmethod
     def _prepare_groups(xml):
         return [Group(g) for g in xml.findall('group')]
+
+

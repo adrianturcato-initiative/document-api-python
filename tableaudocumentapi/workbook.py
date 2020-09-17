@@ -1,6 +1,6 @@
 import weakref
 
-from tableaudocumentapi import Datasource, Dashboard, xfile
+from tableaudocumentapi import Datasource, Dashboard, xfile, AccessPermissions
 from tableaudocumentapi.xfile import xml_open
 
 
@@ -30,6 +30,10 @@ class Workbook(object):
 
         self._dashboards = self._prepare_dashboards(self._workbookRoot)
 
+        self._user_filter = self._prepare_user_filter(self._datasources)
+
+        self._access_permissions = self._prepare_access_permissions(self._user_filter)
+
     @property
     def datasources(self):
         return self._datasources
@@ -49,6 +53,14 @@ class Workbook(object):
     @property
     def name(self):
         return self._name
+
+    @property
+    def user_filter(self):
+        return self._user_filter
+
+    @property
+    def access_permissions(self):
+        return self._access_permissions
 
     def save(self):
         """
@@ -142,3 +154,19 @@ class Workbook(object):
     def _prepare_name(filename):
         f = filename.split("\\")[-1].split(".")[0]
         return f
+
+    @staticmethod
+    def _prepare_user_filter(datasources):
+        for i, d in enumerate(datasources):
+            groups = d.groups
+            for j, g in enumerate(groups):
+                if g.is_user_filter:
+                    return g
+        return None
+
+    @staticmethod
+    def _prepare_access_permissions(user_filter):
+        if user_filter:
+            return AccessPermissions(user_filter_group=user_filter)
+        else:
+            return None

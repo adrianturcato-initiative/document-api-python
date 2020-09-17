@@ -1,3 +1,4 @@
+from .access_permisions import AccessPermissions
 from .field import Field
 from .connection import Connection
 from .group import Group
