@@ -1,3 +1,6 @@
+import pandas as pd
+from collections import OrderedDict
+
 class GroupPermissions(object):
     def __init__(self,name: str, advertisers: list):
         self._name = name
@@ -52,6 +55,30 @@ class AccessPermissions(object):
         if self._csv_table:
             return self._csv_table
         else:
-            table = []
+            indices = dict()
+
+            for g in self._group_permissions:
+                series_indices = g.advertisers
+
+                for a in series_indices:
+                    if a not in indices:
+                        indices[a] = len(indices)
+
+            print(indices)
+            for g in self._group_permissions:
+                series_name = g.name
+                series_indices = g.advertisers
+                series_values = [0]*25
+
+                for a in series_indices:
+                    sseries_values[indices[a]] = 1
+
+
+                print(series_values)
+
+
+
+
+
 
 

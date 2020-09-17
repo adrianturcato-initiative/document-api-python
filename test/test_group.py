@@ -22,6 +22,7 @@ class GroupTWB(unittest.TestCase):
         self.datasources = self.wb.datasources
         self.user_filter = self.wb.user_filter
         self.access_permissions = self.wb.access_permissions
+        self.csv = self.access_permissions.get_permissions_table_CSV()
 
     def test_groups_in_datasource(self):
         self.assertEqual(len(self.datasources[0].groups), 0)
