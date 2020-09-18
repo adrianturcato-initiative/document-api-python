@@ -56,6 +56,7 @@ class AccessPermissions(object):
             return self._csv_table
         else:
             indices = dict()
+            df = pd.DataFrame()
 
             for g in self._group_permissions:
                 series_indices = g.advertisers
@@ -64,17 +65,20 @@ class AccessPermissions(object):
                     if a not in indices:
                         indices[a] = len(indices)
 
-            print(indices)
             for g in self._group_permissions:
                 series_name = g.name
                 series_indices = g.advertisers
-                series_values = [0]*25
+                series_values = [0]*len(indices)
 
                 for a in series_indices:
-                    sseries_values[indices[a]] = 1
+                    series_values[indices[a]] = 1
 
+                df[series_name] = series_values
 
-                print(series_values)
+            df['advertisers'] = list(indices.keys())
+            df = df.set_index('advertisers')
+            csv = df.to_csv()
+            return csv
 
 
 
