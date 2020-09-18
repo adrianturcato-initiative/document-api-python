@@ -2,17 +2,20 @@ import pandas as pd
 import csv
 
 class GroupPermissions(object):
-    def __init__(self,name: str, advertisers: list):
+    def __init__(self,name: str, advertiser_names: list):
         self._name = name
-        self._advertisers = advertisers
+        self._advertisers = advertiser_names
+
 
     @property
     def name(self):
         return self._name
 
+
     @property
     def advertisers(self):
         return self._advertisers
+
 
 class AccessPermissions(object):
     def __init__(self,user_filter_group = None, csv_file_contents:str = None):
@@ -24,15 +27,19 @@ class AccessPermissions(object):
         elif csv_file_contents:
             self._prepare_permissions_from_csv(csv_file_contents)
 
+
     @property
     def group_permissions(self):
         return self._group_permissions
 
+
     def _strip_group_name(self,name):
         return name.replace("ISMEMBEROF('local\\",'').replace("')",'')
 
+
     def _strip_advertiser_name(self,name):
         return name[1:-1]
+
 
     def _prepare_permissions_from_group(self,filter_group):
         filterXML = filter_group.groupXML
@@ -51,8 +58,16 @@ class AccessPermissions(object):
 
                 self._group_permissions.append(GroupPermissions(group_name,advertiser_names))
 
-    def _prepare_permissions_from_csv(self,csv_file_contents):
-        print(csv.reader(csv_file_contents))
+
+    def _prepare_permissions_from_csv(self,csv_file_contents:str):
+        lines = [l.split(',') for l in csv_file_contents.split('\n')]
+        zipped = list(zip(*lines))
+        advertiser_names = zipped[0]
+        groups = zipped[1:]
+        self._group_permissions = []
+        for g in groups:
+            group_advertisers = [advertiser_names[index] for index, ad in enumerate(g) if ad == '1']
+            self._group_permissions.append(GroupPermissions(g[0],group_advertisers))
 
 
     def get_permissions_table_CSV(self):
