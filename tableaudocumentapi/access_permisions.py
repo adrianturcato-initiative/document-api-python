@@ -98,10 +98,3 @@ class AccessPermissions(object):
             df = df.set_index('advertisers')
             csv = df.to_csv()
             return csv
-
-
-
-
-
-
-

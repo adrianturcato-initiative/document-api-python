@@ -1,4 +1,5 @@
 import weakref
+from xml.etree.ElementTree import Element, SubElement
 
 from tableaudocumentapi import Datasource, Dashboard, xfile, AccessPermissions
 from tableaudocumentapi.xfile import xml_open
@@ -157,6 +158,7 @@ class Workbook(object):
 
     @staticmethod
     def _prepare_user_filter(datasources):
+        print("_prepare_user_filter")
         for i, d in enumerate(datasources):
             groups = d.groups
             for j, g in enumerate(groups):
@@ -173,3 +175,18 @@ class Workbook(object):
 
     def ingest_access_permissions(self,csv):
         self._access_permissions = AccessPermissions(csv_file_contents=csv)
+
+    @staticmethod
+    def _get_user_filter_parent_datasource(datasources):
+        print("_prepare_user_filter")
+        for i, d in enumerate(datasources):
+            groups = d.groups
+            for j, g in enumerate(groups):
+                if g.is_user_filter:
+                    return d
+        return None
+
+    def insert_user_filter(self):
+        pass
+
+

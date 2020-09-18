@@ -42,8 +42,10 @@ class Group(object):
             return False
 
     @classmethod
-    def build_user_filter_group(cls,filter_groups):
-        group_el = Element('group',name='[User Filter 1]', name_style='unqualified', user_ui_builder='identity-set')
+    def apply_user_filter_group(cls,parent_XML,filter_groups):
+        group_el = SubElement(parent_XML,'group',name='[User Filter 1]')
+        group_el.set('name-style','unqualified') #attribute name include special chars so we will set in a different fashion
+        group_el.set('user:ui-builder','identity-set') #attribute name include special chars so we will set in a different fashion
         intersection_el = SubElement(group_el, 'groupfilter', function="intersection")
         SubElement(intersection_el, function='level-members', level='[Advertiser]' )
         union_el = SubElement(intersection_el, 'groupfilter', function="union")
@@ -55,5 +57,3 @@ class Group(object):
             user_union_el = SubElement(user_el, 'groupfilter', function="union")
             for ad in grp.advertisers:
                 SubElement(user_union_el, 'groupfilter', function='member', level='[Advertiser]', member=f'&quot;{ad}&quot;' )
-
-        return group_el
