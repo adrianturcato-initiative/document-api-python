@@ -19,6 +19,11 @@ TEST_TWB_FILE2 = os.path.join(
     'datasource_test.twb'
 )
 
+ACCESS_PERMISSIONS = os.path.join(
+    TEST_ASSET_DIR,
+    'access_permissions.csv'
+)
+
 class GroupTWB(unittest.TestCase):
 
     def setUp(self):
@@ -28,7 +33,10 @@ class GroupTWB(unittest.TestCase):
         self.access_permissions = self.wb.access_permissions
         self.csv = self.access_permissions.get_permissions_table_CSV()
 
+        with open(ACCESS_PERMISSIONS) as f:
+            self.csv2 = f.read()
         self.wb2 = Workbook(TEST_TWB_FILE2)
+        self.wb2.ingest_access_permissions(self.csv2)
 
     def test_groups_in_datasource(self):
         self.assertEqual(len(self.datasources[0].groups), 0)

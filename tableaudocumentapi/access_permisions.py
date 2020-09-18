@@ -1,5 +1,5 @@
 import pandas as pd
-from collections import OrderedDict
+import csv
 
 class GroupPermissions(object):
     def __init__(self,name: str, advertisers: list):
@@ -15,14 +15,14 @@ class GroupPermissions(object):
         return self._advertisers
 
 class AccessPermissions(object):
-    def __init__(self,user_filter_group = None, csv_file_contents = None):
+    def __init__(self,user_filter_group = None, csv_file_contents:str = None):
         self._group_permissions = []
         self._csv_table = csv_file_contents
 
         if user_filter_group:
             self._prepare_permissions_from_group(user_filter_group)
         elif csv_file_contents:
-            pass
+            self._prepare_permissions_from_csv(csv_file_contents)
 
     @property
     def group_permissions(self):
@@ -50,6 +50,10 @@ class AccessPermissions(object):
                         advertiser_names.append(advertiser_name)
 
                 self._group_permissions.append(GroupPermissions(group_name,advertiser_names))
+
+    def _prepare_permissions_from_csv(self,csv_file_contents):
+        print(csv.reader(csv_file_contents))
+
 
     def get_permissions_table_CSV(self):
         if self._csv_table:

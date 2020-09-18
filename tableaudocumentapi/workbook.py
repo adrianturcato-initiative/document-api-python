@@ -170,3 +170,6 @@ class Workbook(object):
             return AccessPermissions(user_filter_group=user_filter)
         else:
             return None
+
+    def ingest_access_permissions(self,csv):
+        self._access_permissions = AccessPermissions(csv_file_contents=csv)
