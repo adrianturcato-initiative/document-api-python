@@ -128,8 +128,7 @@ class Datasource(object):
         self._filename = filename
         self._datasourceXML = dsxml
         self._datasourceTree = ET.ElementTree(self._datasourceXML)
-        self._name = self._datasourceXML.get('name') or self._datasourceXML.get(
-            'formatted-name')  # TDS files don't have a name attribute
+        self._name = self._datasourceXML.get('name') or self._datasourceXML.get('formatted-name')  # TDS files don't have a name attribute
         self._version = self._datasourceXML.get('version')
         self._caption = self._datasourceXML.get('caption', '')
         self._connection_parser = ConnectionParser(
@@ -254,4 +253,7 @@ class Datasource(object):
     def _prepare_groups(xml):
         return [Group(g) for g in xml.findall('group')]
 
+    @property
+    def datasourceXML(self):
+        return self._datasourceXML
 

@@ -41,19 +41,4 @@ class Group(object):
         else:
             return False
 
-    @classmethod
-    def apply_user_filter_group(cls,parent_XML,filter_groups):
-        group_el = SubElement(parent_XML,'group',name='[User Filter 1]')
-        group_el.set('name-style','unqualified') #attribute name include special chars so we will set in a different fashion
-        group_el.set('user:ui-builder','identity-set') #attribute name include special chars so we will set in a different fashion
-        intersection_el = SubElement(group_el, 'groupfilter', function="intersection")
-        SubElement(intersection_el, function='level-members', level='[Advertiser]' )
-        union_el = SubElement(intersection_el, 'groupfilter', function="union")
-        union_sub_el = SubElement(union_el, 'groupfilter', expression='false', function='filter')
-        SubElement(union_sub_el, 'groupfilter',function='level-members', level='[Advertiser]')
 
-        for grp in filter_groups:
-            user_el = SubElement(union_el, 'groupfilter', expression=f"ISCURRENTUSER('{grp.name}')", function="filter")
-            user_union_el = SubElement(user_el, 'groupfilter', function="union")
-            for ad in grp.advertisers:
-                SubElement(user_union_el, 'groupfilter', function='member', level='[Advertiser]', member=f'&quot;{ad}&quot;' )

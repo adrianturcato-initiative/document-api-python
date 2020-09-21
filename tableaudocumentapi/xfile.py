@@ -24,6 +24,7 @@ class TableauInvalidFileException(Exception):
 def xml_open(filename, expected_root=None):
     """Opens the provided 'filename'. Handles detecting if the file is an archive,
     detecting the document version, and validating the root tag."""
+    ET.register_namespace("user", "http://www.tableausoftware.com/xml/user")
 
     # Is the file a zip (.twbx or .tdsx)
     if zipfile.is_zipfile(filename):
@@ -125,7 +126,6 @@ def save_into_archive(xml_tree, filename, new_filename=None, new_logo=None):
 
 
 def _save_file(container_file, xml_tree, new_filename=None, new_logo=None):
-
     if new_filename is None:
         new_filename = container_file
 

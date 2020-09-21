@@ -16,7 +16,12 @@ TEST_TWB_FILE = os.path.join(
 
 TEST_TWB_FILE2 = os.path.join(
     TEST_ASSET_DIR,
-    'datasource_test.twb'
+    'add_user_filter_test.twb'
+)
+
+TEST_SAVES_THIS_FILE = os.path.join(
+    TEST_ASSET_DIR,
+    'saved_with_user_filter_group_test.twb'
 )
 
 ACCESS_PERMISSIONS = os.path.join(
@@ -64,8 +69,21 @@ class AccessPermissionsTWB(unittest.TestCase):
         self.access_permissions2 = self.wb2.access_permissions
         self.group_permissions2 = self.access_permissions2.group_permissions
 
-        self.assertEqual(len(self.group_permissions2), 4)
+        self.assertEqual(4,len(self.group_permissions2))
         self.assertEqual(self.access_permissions2.get_permissions_table_CSV(), self.csv2)
-        self.assertEqual(self.group_permissions2[0].name,'Jazz Pharmaceuticals-USA-All-Editor')
-        self.assertEqual(self.group_permissions2[0].advertisers[0],'Jazz Pharma - ADKT Unbranded DTC')
-        self.assertEqual(len(self.group_permissions2[0].advertisers), 18)
+        self.assertEqual('Jazz Pharmaceuticals-USA-All-Editor',self.group_permissions2[0].name)
+        self.assertEqual('Jazz Pharma - ADKT Unbranded DTC',self.group_permissions2[0].advertisers[0])
+        self.assertEqual(18,len(self.group_permissions2[0].advertisers))
+
+        self.wb2.save_as(TEST_SAVES_THIS_FILE)
+
+        self.wb3 = Workbook(TEST_SAVES_THIS_FILE)
+        self.access_permissions3 = self.wb3.access_permissions
+        self.group_permissions3 = self.access_permissions3.group_permissions
+        self.csv3 = self.access_permissions3.get_permissions_table_CSV()
+
+        self.assertEqual(4,len(self.group_permissions3))
+        self.assertEqual("Jazz Pharmaceuticals-USA-All-Editor",self.group_permissions3[0].name)
+        self.assertEqual("Jazz Pharma - ADKT Unbranded DTC",self.group_permissions3[0].advertisers[0])
+        self.assertEqual(18,len(self.group_permissions3[0].advertisers))
+        self.assertEqual(hashlib.sha224(self.csv3.encode('UTF-8')).hexdigest(),"78e181dd0e91c7df914b26e71becf92ad93ab5021556a9120151db90")

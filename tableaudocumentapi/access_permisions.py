@@ -1,5 +1,6 @@
 import pandas as pd
-import csv
+from xml.etree.ElementTree import tostring
+import xml.dom.minidom
 
 class GroupPermissions(object):
     def __init__(self,name: str, advertiser_names: list):
@@ -34,11 +35,13 @@ class AccessPermissions(object):
 
 
     def _strip_group_name(self,name):
-        return name.replace("ISMEMBEROF('local\\",'').replace("')",'')
+        stripped = name.replace("ISMEMBEROF('local\\", '').replace("')", '')
+        return stripped
 
 
     def _strip_advertiser_name(self,name):
-        return name[1:-1]
+        stripped = name.replace('"', '')
+        return stripped
 
 
     def _prepare_permissions_from_group(self,filter_group):
@@ -50,16 +53,20 @@ class AccessPermissions(object):
                 group_name = self._strip_group_name(expression)
                 advertisersXML = gfXML.findall('.//groupfilter')
                 advertiser_names = []
+                #print(group_name)
                 for aXML in advertisersXML:
                     member = aXML.get('member',None)
                     if member:
+                        # xml_string = tostring(aXML)
+                        # print(xml.dom.minidom.parseString(xml_string).toprettyxml())
                         advertiser_name = self._strip_advertiser_name(member)
                         advertiser_names.append(advertiser_name)
-
+                # print(advertiser_names)
                 self._group_permissions.append(GroupPermissions(group_name,advertiser_names))
 
 
     def _prepare_permissions_from_csv(self,csv_file_contents:str):
+        print("_prepare_permissions_from_csv")
         lines = [l.split(',') for l in csv_file_contents.split('\n')]
         zipped = list(zip(*lines))
         advertiser_names = zipped[0]

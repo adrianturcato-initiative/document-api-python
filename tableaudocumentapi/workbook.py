@@ -1,5 +1,6 @@
 import weakref
-from xml.etree.ElementTree import Element, SubElement
+from xml.etree.ElementTree import Element, SubElement, tostring
+import xml.dom.minidom
 
 from tableaudocumentapi import Datasource, Dashboard, xfile, AccessPermissions
 from tableaudocumentapi.xfile import xml_open
@@ -158,13 +159,22 @@ class Workbook(object):
 
     @staticmethod
     def _prepare_user_filter(datasources):
-        print("_prepare_user_filter")
         for i, d in enumerate(datasources):
             groups = d.groups
             for j, g in enumerate(groups):
                 if g.is_user_filter:
+                    print("found user filter",g.name)
+                    # xml_string = tostring(d._datasourceXML)
+                    # print(xml.dom.minidom.parseString(xml_string).toprettyxml())
+                    # print(d._datasourceXML.attrib)
                     return g
         return None
+
+    def has_user_filter(self):
+        if self._user_filter:
+            return True
+        else:
+            return False
 
     @staticmethod
     def _prepare_access_permissions(user_filter):
@@ -175,18 +185,43 @@ class Workbook(object):
 
     def ingest_access_permissions(self,csv):
         self._access_permissions = AccessPermissions(csv_file_contents=csv)
+        filter_groups = self._access_permissions.group_permissions
+        parent_datasource = self._get_user_filter_parent_datasource()
+        if parent_datasource:
+            parent_XML = parent_datasource.datasourceXML
+            self._apply_user_filter_group(parent_XML,filter_groups)
+
+    def _get_user_filter_parent_datasource(self):
+        if self._user_filter:
+            for i, d in enumerate(self._datasources):
+                groups = d.groups
+                for j, g in enumerate(groups):
+                    if g.is_user_filter:
+                        #TODO delete existing user filter group?
+                        print("ERROR: duplicate user filter groups created")
+                        return d
+        else:
+            #what group should be the parent of the user filter
+            for i, d in enumerate(self._datasources):
+                if d.name == 'federated.1cfcaj20zwyr8f1c3we6w0yu3sh4':
+                    return d
 
     @staticmethod
-    def _get_user_filter_parent_datasource(datasources):
-        print("_prepare_user_filter")
-        for i, d in enumerate(datasources):
-            groups = d.groups
-            for j, g in enumerate(groups):
-                if g.is_user_filter:
-                    return d
-        return None
+    def _apply_user_filter_group(parent_XML,filter_groups):
+        group_el = SubElement(parent_XML,'group',name='[User Filter 1]')
+        group_el.set('name-style','unqualified') #attribute name include special chars so we will set in a different fashion
+        group_el.set('user:ui-builder','identity-set') #attribute name include special chars so we will set in a different fashion
+        intersection_el = SubElement(group_el, 'groupfilter', function="intersection")
+        SubElement(intersection_el, 'groupfilter', function='level-members', level='[Advertiser]' )
+        union_el = SubElement(intersection_el, 'groupfilter', function="union")
+        union_sub_el = SubElement(union_el, 'groupfilter', expression='false', function='filter')
+        SubElement(union_sub_el, 'groupfilter', function='level-members', level='[Advertiser]')
 
-    def insert_user_filter(self):
-        pass
+        for grp in filter_groups:
+            user_el = SubElement(union_el, 'groupfilter', expression=f"ISMEMBEROF('local\\{grp.name}')", function="filter")
+            user_union_el = SubElement(user_el, 'groupfilter', function="union")
+            for ad in grp.advertisers:
+                SubElement(user_union_el, 'groupfilter', function='member', level='[Advertiser]', member=f'"{ad}"')
+
 
 
