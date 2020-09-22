@@ -5,6 +5,7 @@ from .group import Group
 from .datasource import Datasource, ConnectionParser
 from .zone import Zone
 from .dashboard import Dashboard
+from .worksheet import Worksheet
 from .workbook import Workbook
 
 __version__ = '0.0.1'

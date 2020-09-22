@@ -11198,10 +11198,7 @@ FROM [DCM_UAT].[dbo].[vw_Combined_DCM_Search_Social] a&#13;
         <objects>
           <object caption='Migrated Data' id='Migrated Data'>
             <properties context=''>
-              <relation connection='sqlserver.0e0zrda1qwg263177hutd1ogdth8' name='Custom SQL Query' type='text'>SELECT *&#13;
-FROM [DCM_UAT].[dbo].[vw_Combined_DCM_Search_Social] a&#13;
-&#13;
---where a.Date &gt;&gt;= dateadd(mm,datediff(mm,0,getdate())-6,0)</relation>
+              <relation connection='sqlserver.0e0zrda1qwg263177hutd1ogdth8' name='Custom SQL Query' type='text'></relation>
             </properties>
             <properties context='extract'>
               <relation name='Extract' table='[Extract].[Extract]' type='table' />

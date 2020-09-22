@@ -2,7 +2,7 @@ import weakref
 from xml.etree.ElementTree import Element, SubElement, tostring
 import xml.dom.minidom
 
-from tableaudocumentapi import Datasource, Dashboard, xfile, AccessPermissions
+from tableaudocumentapi import Datasource, Dashboard, xfile, AccessPermissions, Worksheet
 from tableaudocumentapi.xfile import xml_open
 
 
@@ -124,7 +124,7 @@ class Workbook(object):
 
         for worksheet_element in worksheets_element:
             worksheet_name = worksheet_element.attrib['name']
-            worksheets.append(worksheet_name)  # TODO: A real worksheet object, for now, only name
+            worksheets.append(Worksheet(worksheet_element))
             dependencies = worksheet_element.findall('.//datasource-dependencies')
 
             for dependency in dependencies:
@@ -163,7 +163,6 @@ class Workbook(object):
             groups = d.groups
             for j, g in enumerate(groups):
                 if g.is_user_filter:
-                    print("found user filter",g.name)
                     # xml_string = tostring(d._datasourceXML)
                     # print(xml.dom.minidom.parseString(xml_string).toprettyxml())
                     # print(d._datasourceXML.attrib)
@@ -183,27 +182,38 @@ class Workbook(object):
         else:
             return None
 
-    def ingest_access_permissions(self,csv):
+    def ingest_access_permissions(self,datasource_name,csv):
         self._access_permissions = AccessPermissions(csv_file_contents=csv)
         filter_groups = self._access_permissions.group_permissions
-        parent_datasource = self._get_user_filter_parent_datasource()
+        parent_datasource = self._get_user_filter_parent_datasource(datasource_name)
         if parent_datasource:
             parent_XML = parent_datasource.datasourceXML
             self._apply_user_filter_group(parent_XML,filter_groups)
+            #add columns to relevant slices
+            for worksheet in self._worksheets:
+                datasources = worksheet.datasources
+                if datasources[0]['name'] == datasource_name:
+                    if len(datasources) == 1 or (len(datasources) == 2 and datasources[1]['name'] == 'Parameters'):
+                        worksheet.slices.addColumn(f"[{datasource_name}].[User Filter 1]")
+            #add shared_view filter
+            #add window viewpoint
+        else:
+            #TODO proper error handling
+            print("ERROR: parent datasource not found")
 
-    def _get_user_filter_parent_datasource(self):
+    def _get_user_filter_parent_datasource(self,datasource_name):
         if self._user_filter:
             for i, d in enumerate(self._datasources):
                 groups = d.groups
                 for j, g in enumerate(groups):
                     if g.is_user_filter:
-                        #TODO delete existing user filter group?
+                        #TODO overwrite existing user filter group?
                         print("ERROR: duplicate user filter groups created")
                         return d
         else:
             #what group should be the parent of the user filter
             for i, d in enumerate(self._datasources):
-                if d.name == 'federated.1cfcaj20zwyr8f1c3we6w0yu3sh4':
+                if d.name == datasource_name:
                     return d
 
     @staticmethod

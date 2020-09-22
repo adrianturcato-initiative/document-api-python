@@ -87,6 +87,16 @@
             <column-instance column='[a]' derivation='None' name='[none:a:nk]' pivot='key' type='nominal' />
           </datasource-dependencies>
           <aggregation value='true' />
+          <slices>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Advertiser:nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Calculation_2695404418702647306:nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Campaign:nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Date:qk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Partner:nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Tactic/Targeting (copy):nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Unit Type (copy 2):nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[sum:VideoPlays:qk]</column>
+          </slices>
         </view>
         <style />
         <panes>
@@ -114,6 +124,16 @@
             <column caption='X' datatype='integer' name='[x]' role='measure' type='quantitative' />
           </datasource-dependencies>
           <aggregation value='true' />
+          <slices>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Advertiser:nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Calculation_2695404418702647306:nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Campaign:nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Date:qk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Partner:nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Tactic/Targeting (copy):nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Unit Type (copy 2):nk]</column>
+            <column>[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[sum:VideoPlays:qk]</column>
+          </slices>
         </view>
         <style />
         <panes>
