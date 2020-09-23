@@ -2,7 +2,7 @@ import weakref
 from xml.etree.ElementTree import Element, SubElement, tostring
 import xml.dom.minidom
 
-from tableaudocumentapi import Datasource, Dashboard, xfile, AccessPermissions, Worksheet
+from tableaudocumentapi import Datasource, Dashboard, xfile, AccessPermissions, Worksheet, SharedView
 from tableaudocumentapi.xfile import xml_open
 
 
@@ -36,6 +36,8 @@ class Workbook(object):
 
         self._access_permissions = self._prepare_access_permissions(self._user_filter)
 
+        self._shared_views = self._prepare_shared_views(self._workbookRoot)
+
     @property
     def datasources(self):
         return self._datasources
@@ -63,6 +65,10 @@ class Workbook(object):
     @property
     def access_permissions(self):
         return self._access_permissions
+
+    @property
+    def shared_views(self):
+        return self._shared_views
 
     def save(self):
         """
@@ -194,9 +200,16 @@ class Workbook(object):
                 datasources = worksheet.datasources
                 if datasources[0]['name'] == datasource_name:
                     if len(datasources) == 1 or (len(datasources) == 2 and datasources[1]['name'] == 'Parameters'):
+                        #TODO check for duplicates?
                         worksheet.slices.addColumn(f"[{datasource_name}].[User Filter 1]")
-            #add shared_view filter
-            #add window viewpoint
+            #add shared-views filter
+            for shared_view in self._shared_views:
+                datasources = shared_view.datasources
+                if datasources[0]['name'] == datasource_name:
+                    if len(datasources) == 1 or (len(datasources) == 2 and datasources[1]['name'] == 'Parameters'):
+                        # TODO check for duplicates?
+                        shared_view.addFilter(datasource_name)
+            #add window viewpoint, what is this, does it matter? only one worksheet has it applied...
         else:
             #TODO proper error handling
             print("ERROR: parent datasource not found")
@@ -233,5 +246,7 @@ class Workbook(object):
             for ad in grp.advertisers:
                 SubElement(user_union_el, 'groupfilter', function='member', level='[Advertiser]', member=f'"{ad}"')
 
-
+    @staticmethod
+    def _prepare_shared_views(xml_root):
+        return [SharedView(sv) for sv in xml_root.findall('.//shared-view')]
 

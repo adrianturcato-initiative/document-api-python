@@ -41,8 +41,8 @@ class Worksheet(object):
         """
         self._worksheetXML = worksheetXML
         self._name = worksheetXML.attrib['name']
-        self._datasources = self._prepare_datasources(worksheetXML)
-        self._slices = self._prepare_slices(worksheetXML)
+        self._datasources = self._prepare_datasources(self._worksheetXML)
+        self._slices = self._prepare_slices(self._worksheetXML)
 
     @property
     def name(self):
