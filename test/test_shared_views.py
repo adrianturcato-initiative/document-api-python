@@ -21,3 +21,6 @@ class WorksheetTWB(unittest.TestCase):
         self.shared_views = self.wb.shared_views
 
         self.assertEqual('federated.1cfcaj20zwyr8f1c3we6w0yu3sh4',self.shared_views[0].name)
+        self.assertEqual('[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[none:Tactic/Targeting (copy):nk]', self.shared_views[0].filters[-1].column)
+        self.shared_views[0].addFilter('federated.1cfcaj20zwyr8f1c3we6w0yu3sh4')
+        self.assertEqual('[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[User Filter 1]', self.shared_views[0].filters[0].column)

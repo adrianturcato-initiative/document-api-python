@@ -15,8 +15,9 @@ class Slices(object):
         return self._columns
 
     def addColumn(self,contents):
-        column = SubElement(self._slicesXML,'column')
+        column = Element('column')
         column.text = contents
+        self._slicesXML.insert(0,column)
         self._columns = self._prepare_columns(self._slicesXML)
 
     def has_user_filter(self):

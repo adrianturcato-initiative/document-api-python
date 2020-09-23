@@ -66,7 +66,7 @@ class AccessPermissions(object):
 
 
     def _prepare_permissions_from_csv(self,csv_file_contents:str):
-        lines = [l.split(',') for l in csv_file_contents.split('\n')]
+        lines = [l.split(',') for l in csv_file_contents.splitlines()]
         zipped = list(zip(*lines))
         advertiser_names = zipped[0]
         groups = zipped[1:]

@@ -231,7 +231,7 @@ class Workbook(object):
 
     @staticmethod
     def _apply_user_filter_group(parent_XML,filter_groups):
-        group_el = SubElement(parent_XML,'group',name='[User Filter 1]')
+        group_el = Element('group',name='[User Filter 1]')
         group_el.set('name-style','unqualified') #attribute name include special chars so we will set in a different fashion
         group_el.set('user:ui-builder','identity-set') #attribute name include special chars so we will set in a different fashion
         intersection_el = SubElement(group_el, 'groupfilter', function="intersection")
@@ -245,6 +245,13 @@ class Workbook(object):
             user_union_el = SubElement(user_el, 'groupfilter', function="union")
             for ad in grp.advertisers:
                 SubElement(user_union_el, 'groupfilter', function='member', level='[Advertiser]', member=f'"{ad}"')
+
+        last_group_or_column_index = -1
+        for i, el in enumerate(list(parent_XML)):
+            if el.tag == 'group' or el.tag == 'column':
+                last_group_or_column_index = i
+
+        parent_XML.insert(last_group_or_column_index+1,group_el)
 
     @staticmethod
     def _prepare_shared_views(xml_root):

@@ -35,6 +35,7 @@ class WorksheetTWB(unittest.TestCase):
 
 
     def test_adding_column_to_slices(self):
+        print("test_adding_column_to_slices")
         with open(ACCESS_PERMISSIONS) as f:
             self.csv2 = f.read()
         self.wb2 = Workbook(TEST_TWB_FILE2)
@@ -46,5 +47,5 @@ class WorksheetTWB(unittest.TestCase):
 
         self.wb2.ingest_access_permissions('federated.1cfcaj20zwyr8f1c3we6w0yu3sh4',self.csv2)
 
-        self.assertEqual("[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[User Filter 1]",self.wb2.worksheets[0].slices.columns[-1])
+        self.assertEqual("[federated.1cfcaj20zwyr8f1c3we6w0yu3sh4].[User Filter 1]",self.wb2.worksheets[0].slices.columns[0])
         self.assertTrue("has", self.wb2.worksheets[0].slices.has_user_filter())

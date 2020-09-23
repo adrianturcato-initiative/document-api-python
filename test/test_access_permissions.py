@@ -16,7 +16,7 @@ TEST_TWB_FILE = os.path.join(
 
 TEST_TWB_FILE2 = os.path.join(
     TEST_ASSET_DIR,
-    'add_user_filter_test.twb'
+    'Performance_Dashboard_v3_template.twb'
 )
 
 TEST_SAVES_THIS_FILE = os.path.join(
