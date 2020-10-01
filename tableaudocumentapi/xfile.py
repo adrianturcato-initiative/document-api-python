@@ -85,20 +85,23 @@ def get_xml_from_archive(filename):
 def build_archive_file(archive_contents, zip_file, new_logo=None):
     """Build a Tableau-compatible archive file."""
 
+
     # This is tested against Desktop and Server, and reverse engineered by lots
     # of trial and error. Do not change this logic.
+    needs_logo = True
     for root_dir, _, files in os.walk(archive_contents):
         relative_dir = os.path.relpath(root_dir, archive_contents)
         for f in files:
-            if relative_dir == "Image" and new_logo:
-                #TODO throw error if logo can't be found
-                temp_file_full_path = os.path.abspath(new_logo.filepath)
-                zipname = os.path.join(relative_dir, new_logo.name)
-            else:
-                temp_file_full_path = os.path.join(archive_contents, relative_dir, f)
-                zipname = os.path.join(relative_dir, f)
-
+            temp_file_full_path = os.path.join(archive_contents, relative_dir, f)
+            zipname = os.path.join(relative_dir, f)
             zip_file.write(temp_file_full_path, arcname=zipname)
+
+    # Save in logo if it is not already present
+    logo_asset_path = os.path.abspath(new_logo.filepath)
+    logo_name = os.path.join("Image", new_logo.name)
+    logo_temp_path = os.path.abspath(os.path.join(archive_contents,logo_name))
+    if not os.path.exists(logo_temp_path) and new_logo:
+        zip_file.write(logo_asset_path, arcname=logo_name)
 
 
 def save_into_archive(xml_tree, filename, new_filename=None, new_logo=None):
