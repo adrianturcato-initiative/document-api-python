@@ -97,11 +97,12 @@ def build_archive_file(archive_contents, zip_file, new_logo=None):
             zip_file.write(temp_file_full_path, arcname=zipname)
 
     # Save in logo if it is not already present
-    logo_asset_path = os.path.abspath(new_logo.filepath)
-    logo_name = os.path.join("Image", new_logo.name)
-    logo_temp_path = os.path.abspath(os.path.join(archive_contents,logo_name))
-    if not os.path.exists(logo_temp_path) and new_logo:
-        zip_file.write(logo_asset_path, arcname=logo_name)
+    if new_logo:
+        logo_asset_path = os.path.abspath(new_logo.filepath)
+        logo_name = os.path.join("Image", new_logo.name)
+        logo_temp_path = os.path.abspath(os.path.join(archive_contents,logo_name))
+        if not os.path.exists(logo_temp_path):
+            zip_file.write(logo_asset_path, arcname=logo_name)
 
 
 def save_into_archive(xml_tree, filename, new_filename=None, new_logo=None):
